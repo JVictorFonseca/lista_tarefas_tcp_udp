@@ -16,7 +16,7 @@ PORT_UDP = 6000
         print(f"[NOTIFICAÇÃO]: {msg.decode()}")
 '''        
 
-#sem bind() fixo, para poder ter mais de um cliente ao mesmo tempo
+#Sem bind() fixo, para poder ter mais de um cliente ao mesmo tempo
 def escutar_udp():
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
