@@ -1,41 +1,51 @@
 import socket
 import threading
+import json
 
 HOST = 'localhost'
 PORT_TCP = 5000
 PORT_UDP = 6000
 
-# Lida com notificações recebidas via UDP
-
-#bind fixo
-#def escutar_udp():
-'''    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# Thread para escutar notificações UDP
+def escutar_udp():
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_socket.bind(('', PORT_UDP))
     while True:
         msg, _ = udp_socket.recvfrom(1024)
-        print(f"[NOTIFICAÇÃO]: {msg.decode()}")
-'''        
+        print(f"\n[🔔 NOTIFICAÇÃO]: {msg.decode()}")
 
-#Sem bind() fixo, para poder ter mais de um cliente ao mesmo tempo
-def escutar_udp():
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    udp_socket.bind(('', PORT_UDP))  # OK em Linux/macOS, mas pode causar problema no Windows se mais de um cliente fizer isso
-    while True:
-        msg, _ = udp_socket.recvfrom(1024)
-        print(f"[NOTIFICAÇÃO]: {msg.decode()}")
-        
-
-# Inicia escuta UDP em uma thread
+# Inicia thread de escuta UDP
 threading.Thread(target=escutar_udp, daemon=True).start()
 
-# Cliente envia tarefas via TCP
+# Loop principal do cliente
 while True:
-    tarefa = input("Digite uma nova tarefa (ou 'sair'): ")
-    if tarefa.lower() == 'sair':
+    print("\n--- Nova Tarefa ---")
+    titulo = input("Título da tarefa (ou 'sair'): ").strip()
+    if titulo.lower() == 'sair':
+        print("Encerrando cliente...")
         break
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT_TCP))
-        s.send(tarefa.encode())
-        lista_atualizada = s.recv(4096).decode()
-        print("Tarefas atualizadas:", lista_atualizada)
+    descricao = input("Descrição: ").strip()
+
+    # Monta mensagem no formato JSON
+    mensagem = {
+        "tipo": "adicionar",
+        "titulo": titulo,
+        "descricao": descricao
+    }
+
+    # Envia mensagem via TCP
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT_TCP))
+            s.send(json.dumps(mensagem).encode())
+
+            resposta = s.recv(4096).decode()
+            tarefas = json.loads(resposta)
+
+            print("\n📋 Lista atualizada de tarefas:")
+            for i, tarefa in enumerate(tarefas, 1):
+                print(f"{i}. {tarefa['titulo']}: {tarefa['descricao']}")
+    except ConnectionRefusedError:
+        print("[ERRO] Não foi possível conectar ao servidor.")
+    except json.JSONDecodeError:
+        print("[ERRO] Resposta do servidor está em formato inválido.")
