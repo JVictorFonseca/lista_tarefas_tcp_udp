@@ -30,19 +30,19 @@ def enviar_notificacao_udp(mensagem):
 
 # Lida com conexões TCP de clientes
 def lidar_com_cliente_tcp(conn, addr):
-    print(f"Conexão TCP de {addr}")
+    print(f"[TCP] Conexão de {addr}")
     try:
         while True:
             dados = conn.recv(1024).decode()
             if not dados:
                 break
-            print(f"Recebido de {addr}: {dados}")
+            print(f"[TCP] Recebido de {addr}: {dados}")
             tarefas.append(dados)
             salvar_tarefas()
             conn.send(json.dumps(tarefas).encode())
             enviar_notificacao_udp(f"Nova tarefa adicionada: {dados}")
     except:
-        print(f"Conexão encerrada com {addr}")
+        print(f"[ERRO] Conexão encerrada com {addr}")
     finally:
         conn.close()
 
@@ -51,7 +51,7 @@ def iniciar_servidor_tcp():
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_socket.bind((HOST, PORT_TCP))
     tcp_socket.listen()
-    print(f"Servidor TCP ouvindo em {HOST}:{PORT_TCP}")
+    print(f"[INICIADO] Servidor TCP ouvindo em {HOST}:{PORT_TCP}")
     while True:
         conn, addr = tcp_socket.accept()
         threading.Thread(target=lidar_com_cliente_tcp, args=(conn, addr)).start()

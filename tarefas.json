@@ -1,5 +1,13 @@
 [
     "terminar tarefa 2 de ds-distribuido",
     "testando criador de tarefas",
-    "cls"
+    "cls",
+    "{\"tipo\": \"adicionar\", \"titulo\": \"terminar tarefa 2 de dsd\", \"descricao\": \"Ver se est\\u00e1 cumprindo os requisitos\"}",
+    {
+        "tipo": "adicionar",
+        "titulo": "Tarefa 2 de dsd",
+        "descricao": "terminar e verificar requisitos"
+    },
+    "terminar tarefa 2 dsd",
+    "verificar requisitos de tarefa 2"
 ]
