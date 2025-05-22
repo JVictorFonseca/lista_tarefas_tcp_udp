@@ -3,7 +3,7 @@ import threading
 import json
 import os
 
-HOST = 'localhost'
+HOST = '0.0.0.0'
 PORT_TCP = 5000
 PORT_UDP = 6000
 BROADCAST_IP = '255.255.255.255'
