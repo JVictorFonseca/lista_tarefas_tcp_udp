@@ -1,4 +1,4 @@
-[
+11[
     "terminar tarefa 2 de ds-distribuido",
     "testando criador de tarefas",
     "cls",
@@ -17,7 +17,5 @@
     "Completar tarefa",
     "JV",
     "LISTAR_CLIENTES",
-    "CRIAR_TAREFA|Apresentar tarefa 2 dsd|Trabalgo de Gracon",
-    "ATUALIZAR_TAREFA|1|6|6",
-    "LISTAR_TAREFAS"
+    "CRIAR_TAREFA|Apresentar tarefa 2 dsd|Trabalgo de Gracon"
 ]
